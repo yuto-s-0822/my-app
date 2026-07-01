@@ -8,11 +8,15 @@ import { PrismaClient } from "./generated/prisma/client";
 console.log("接続URLを確認:", process.env.DATABASE_URL ? "URLは読み込めておるぞ" : "URLが空っぽじゃ！");
 
 
-// 修正前: const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// 修正前: ssl: true
+// 修正後: 次のように書き換えるのじゃ
 const pool = new Pool({ 
   connectionString: process.env.DATABASE_URL,
-  ssl: true // これを書き足してみるのじゃ
+  ssl: {
+    rejectUnauthorized: false // 「証明書のチェックをパスする」という設定じゃ
+  }
 });
+
 
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter, log: ["query"] });
